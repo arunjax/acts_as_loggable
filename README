@@ -1,0 +1,39 @@
+Acts as Loggable
+================
+    Simplifies the process of logging activities.
+
+Prepare database
+================
+    ruby script/generate log_activity_files # This command will copy 3 files: helper file, RecentActivity model, and a migration file.
+    rake db:migrate
+
+Example
+=======
+Lets log the signup process and edit profile process
+Add these lines to user.rb:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+acts_as_loggable
+
+after_create :create_signup_activity
+after_save :create_profile_updated_activity
+
+def create_signup_activity
+    # Here '1' denotes the type of the activity i.e. user creation.
+    # Also :user denotes the object who creates the activity.
+    create_recent_activity(:user => self, :activity_type => 1) 
+end
+
+def create_profile_updated_activity
+    if name_changed? || city_changed? || country_changed? # Create the recent activity only the any of these fields have changed.
+        # Here '2' denotes the type of the activity i.e. edit profile.
+        # If the user further updates his profile, no new record will be created. But it will simply update the time_stamp field of this record.
+        create_recent_activity(:user => self, :activity_type => 2, :disable_further_logging_for => 15.minutes)
+    end
+end
+
+
+
+
+Copyright (c) 2009 [Arun Kumar], released under the MIT license

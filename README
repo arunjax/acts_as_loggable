@@ -26,7 +26,7 @@ def create_signup_activity
 end
 
 def create_profile_updated_activity
-    if name_changed? || city_changed? || country_changed? # Create the recent activity only the any of these fields have changed.
+    if name_changed? || city_changed? || country_changed? # Create the recent activity only if any of these fields have changed.
         # Here '2' denotes the type of the activity i.e. edit profile.
         # If the user further updates his profile, no new record will be created. But it will simply update the time_stamp field of this record.
         create_recent_activity(:user => self, :activity_type => 2, :disable_further_logging_for => 15.minutes)
